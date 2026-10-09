@@ -79,16 +79,27 @@ body.paused *,body.paused *::before,body.paused *::after{animation-play-state:pa
 .btn.ghost:hover{background:rgba(255,255,255,.08);border-color:var(--text-primary)}
 @media (min-width:1100px){.brand small{display:inline}}
 @media (max-width:900px){
-  .nav-toggle{display:grid;place-items:center;align-content:center;gap:5px;width:46px;height:46px;border-radius:12px;border:1px solid var(--line-strong);background:rgba(8,10,18,.4);cursor:pointer;padding:0}
-  .nav-toggle i{display:block;width:20px;height:2px;border-radius:2px;background:var(--text-primary);transition:transform .35s var(--ease),opacity .25s var(--ease)}
-  .nav.open .nav-toggle i:nth-of-type(1){transform:translateY(3.5px) rotate(45deg)}
-  .nav.open .nav-toggle i:nth-of-type(2){transform:translateY(-3.5px) rotate(-45deg)}
-  .links{position:fixed;left:0;right:0;top:64px;flex-direction:column;align-items:stretch;gap:0;padding:8px var(--gutter) 26px;background:#161C2A;border-bottom:1px solid var(--line);opacity:0;visibility:hidden;transform:translateY(-8px);transition:opacity .3s var(--ease),transform .3s var(--ease),visibility 0s linear .3s}
-  .nav.open .links{opacity:1;visibility:visible;transform:none;transition-delay:0s}
-  .links a{padding:17px 4px;border-bottom:1px solid var(--line);font-size:1.08rem;color:var(--text-primary);text-shadow:none}
-  .links a[aria-current="page"]:not(.btn)::after{display:none}
-  .links a[aria-current="page"]{color:var(--accent-hover)}
-  .links a.btn{margin-top:18px;border:0;padding:15px 24px}
+  .nav .wrap{gap:12px}
+  .links{flex:1;min-width:0;gap:clamp(10px,3.4vw,24px);overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  .links a:first-child{margin-left:auto}
+  .links::-webkit-scrollbar{display:none}
+  .links a{flex:none;padding:10px 0;font-size:.86rem;white-space:nowrap}
+  .links a[aria-current="page"]:not(.btn)::after{bottom:2px}
+  .links a.btn{padding:9px 16px;font-size:.84rem}
+}
+@media (max-width:640px){
+  .brand{font-size:0;gap:0;flex:none}
+  .links a.btn{display:none}
+  .links a{font-size:.84rem}
+}
+@media (max-width:360px){
+  .nav .wrap{gap:8px}
+  .brand img{width:34px;height:34px}
+  .links a{font-size:.8rem}
+}
+@media (max-width:340px){
+  .links{gap:8px}
+  .links a{font-size:.74rem}
 }
 
 /* sections */
