@@ -1,0 +1,665 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>JFW Academy | Jakarta Football Warriors</title>
+<meta name="description" content="JFW Academy, Jakarta Football Warriors. Founding squads for U10, U12 and U16 are forming now. Join the founding squad.">
+<meta name="theme-color" content="#161C2A">
+<meta name="color-scheme" content="dark">
+<!-- PREVIEW ONLY: remove the next tag at the real launch -->
+<meta name="robots" content="noindex, nofollow">
+<link rel="icon" type="image/png" href="assets/logo-64.png">
+<!-- DEPLOY STEP: patch og:url and og:image with the live absolute URL before zipping -->
+<meta property="og:type" content="website">
+<meta property="og:title" content="JFW Academy | Walk out ready.">
+<meta property="og:description" content="Founding squads for U10, U12 and U16 are forming now.">
+<meta property="og:url" content="https://cruzsl.github.io/prototypejfw/">
+<meta property="og:image" content="https://cruzsl.github.io/prototypejfw/assets/hero-ending.jpg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Big+Shoulders+Display:wght@700;800;900&family=DM+Mono:wght@400;500&family=Instrument+Sans:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/site.css">
+<script src="assets/site.js" defer></script>
+<style>
+
+/* ---------- hero (scrub mode) ---------- */
+.hero{position:relative;height:600vh}
+.stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:var(--canvas)}
+.poster{position:absolute;inset:0;background-size:cover;background-position:center}
+#hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:translateZ(0);will-change:transform;transition:opacity .8s var(--ease)}
+.stage.video-ready #hero-video{opacity:1}
+.scrim{position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(10,10,18,0) 38%,rgba(10,10,18,.46) 100%)}
+.band{position:absolute;z-index:3;opacity:0;visibility:hidden;pointer-events:none;text-shadow:var(--tshadow);width:min(31vw,28rem)}
+.band.live{pointer-events:auto}
+.band::before{content:"";position:absolute;z-index:-1;inset:-34% -42%;pointer-events:none;opacity:calc(.25 + .75*var(--k,1));background:radial-gradient(ellipse 74% 62% at 50% 50%,rgba(5,5,10,var(--s0,.78)) 0%,rgba(5,5,10,var(--s1,.54)) 46%,rgba(5,5,10,0) 76%)}
+.b3{--s0:.9;--s1:.68}
+.b1{left:5.5vw;top:50%;transform:translateY(-50%)}
+.b2{right:5.5vw;top:50%;transform:translateY(-50%);text-align:right}
+.b3{left:5.5vw;top:50%;transform:translateY(-50%)}
+.b4{left:50%;top:max(13vh,92px);transform:translateX(-50%);width:min(92vw,54rem);text-align:center}
+.b4::before{inset:-26% -14% -62% -14%;background:radial-gradient(ellipse 62% 56% at 50% 40%,rgba(5,5,10,.88) 0%,rgba(5,5,10,.66) 48%,rgba(5,5,10,0) 78%)}
+.band .h{font-family:var(--display);font-weight:800;text-transform:uppercase;line-height:.94;letter-spacing:.005em;font-size:clamp(2.7rem,5.6vw,6.2rem)}
+.b4 .h{font-size:clamp(2.6rem,min(8.4vw,13vh),8.6rem)}
+@media (max-height:680px){.b4{top:max(10vh,78px)}.b4 .sub{margin-top:10px;font-size:1rem}.b4 .actions{margin-top:16px}}
+.band .vis{display:block}
+.w{display:inline-block;white-space:nowrap}
+.c{display:inline-block}
+.band .sub{margin:18px auto 0;font-size:clamp(1rem,1.5vw,1.3rem);max-width:34ch;color:var(--text-primary)}
+.band .actions{margin-top:26px}
+.band .btn{text-shadow:none;pointer-events:auto}
+.static-lines{display:none}
+
+/* entrance personalities, all transform and opacity, scrubbed off --k */
+.fx-depth .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);transform:scale(calc(.82 + .18*var(--kc)))}
+.fx-grid .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:translateX(calc((1 - var(--kc))*var(--jx,0px)))}
+.fx-punch .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*3,1);--ks:clamp(0,(var(--k,0) - var(--th,0) - var(--sd,.1))*var(--ss,3.2),1);opacity:var(--kc);transform:scale(calc(.6 + (.4 + var(--ov,.12))*var(--kc) - var(--ov,.12)*var(--ks)))}
+.fx-punch .w.em{--ov:.24;--sd:.16;--ss:2.6;color:#fff}
+.fx-rise .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);transform:translateY(calc((1 - var(--kc))*30px))}
+.b4 .sub{--ks:clamp(0,(var(--k,0) - .66)*4,1);opacity:var(--ks);transform:translateY(calc((1 - var(--ks))*14px))}
+.b4 .actions{--kb:clamp(0,(var(--k,0) - .78)*5,1);opacity:var(--kb);transform:translateY(calc((1 - var(--kb))*14px))}
+
+.ring{position:absolute;z-index:4;left:50%;bottom:calc(max(7vh,48px) + 44px);width:38px;height:38px;margin-left:-19px;color:var(--text-primary);transform:rotate(-90deg);opacity:.85;transition:opacity .6s var(--ease)}
+.ring .back{opacity:.22}
+.stage.video-ready .ring,.stage.video-failed .ring{opacity:0;pointer-events:none}
+.cue{position:absolute;z-index:4;left:50%;bottom:max(5vh,32px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;text-shadow:var(--tshadow);transition:opacity .5s var(--ease)}
+.cue.gone{opacity:0}
+.cue i{display:block;width:1px;height:34px;background:linear-gradient(var(--text-primary),transparent);transform-origin:top;animation:cue 2.6s var(--ease-io) infinite;animation-delay:-1.1s}
+@keyframes cue{0%{transform:scaleY(.15);opacity:.2}55%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
+@media (max-height:560px){.cue,.ring{display:none}}
+
+/* ---------- static hero (phones, portrait tablets, reduced motion, failed video) ---------- */
+@media (max-width:720px),(orientation:portrait) and (max-width:1024px),(orientation:portrait) and (pointer:coarse),(orientation:landscape) and (pointer:coarse) and (max-height:560px),(prefers-reduced-motion:reduce){
+  .hero{height:auto}
+  .stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
+  .poster{background-image:url('assets/hero-ending.jpg')}
+  #hero-video,.ring,.cue,.b1,.b2,.b3{display:none}
+  .band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}
+  .band .h{font-size:clamp(3rem,12.5vw,5.6rem)}
+  .static-lines{display:grid;gap:8px;margin:26px auto 0;max-width:30rem}
+  .static-lines li{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-primary);background:rgba(8,8,15,.55);border:1px solid rgba(96,96,126,.3);border-radius:10px;padding:9px 12px;backdrop-filter:blur(10px);text-shadow:0 1px 3px rgba(5,5,10,.85)}
+}
+html.static .hero{height:auto}
+html.static .stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
+html.static .poster{background-image:url('assets/hero-ending.jpg')}
+html.static #hero-video,html.static .ring,html.static .cue,html.static .b1,html.static .b2,html.static .b3{display:none}
+html.static .band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}
+html.static .band .h{font-size:clamp(3rem,12.5vw,5.6rem)}
+html.static .static-lines{display:grid;gap:8px;margin:26px auto 0;max-width:30rem}
+html.static .static-lines li{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-primary);background:rgba(8,8,15,.55);border:1px solid rgba(96,96,126,.3);border-radius:10px;padding:9px 12px;backdrop-filter:blur(10px);text-shadow:0 1px 3px rgba(5,5,10,.85)}
+@media (min-width:721px){html.static .band .h{font-size:clamp(3.2rem,8vw,7.4rem)}}
+
+
+/* trial day banner */
+.trial.sec{padding:clamp(44px,6vw,80px) 0;background:linear-gradient(100deg,rgba(216,40,59,.34),rgba(216,40,59,.10) 52%,rgba(110,150,225,.16));border-block:1px solid var(--line)}
+.trial .wrap{display:grid;grid-template-columns:auto 1fr auto;gap:clamp(24px,5vw,72px);align-items:center}
+.trial-date{display:grid;gap:6px;justify-items:start}
+.trial .date{font-size:clamp(3.6rem,8.4vw,7.4rem);line-height:.86;font-weight:900;letter-spacing:.005em}
+.trial-copy{display:grid;gap:12px}
+.trial-copy h2{font-size:clamp(2rem,3.6vw,3.2rem)}
+.trial-copy p{color:var(--text-secondary);max-width:40ch}
+@media (max-width:900px){.trial .wrap{grid-template-columns:1fr}}
+
+/* the road: signature pitch line */
+.road{position:relative;padding-left:96px;--rail:38px}
+.road::before{content:"";position:absolute;left:calc(var(--rail) - 1px);top:14px;bottom:14px;width:2px;background:var(--line)}
+.road .line{position:absolute;left:calc(var(--rail) - 1px);top:14px;bottom:14px;width:2px;background:var(--text-primary);transform-origin:top;transform:scaleY(var(--d,0));box-shadow:0 0 14px rgba(241,238,231,.35)}
+.stop{position:relative;display:grid;grid-template-columns:minmax(150px,.7fr) 1.3fr;gap:clamp(20px,4vw,56px);align-items:start;padding:clamp(34px,5vw,64px) 0;border-top:1px solid var(--line)}
+.stop:first-child{border-top:0;padding-top:0}
+.node{position:absolute;left:-96px;top:calc(clamp(34px,5vw,64px) + 14px);width:34px;height:34px;margin-left:21px;border-radius:50%;border:2px solid var(--line-strong);background:var(--canvas);transition:border-color .5s var(--ease),transform .6s var(--ease),background .5s var(--ease)}
+.stop:first-child .node{top:14px}
+.node::before{content:"";position:absolute;inset:9px;border-radius:50%;background:var(--text-secondary);opacity:.5;transition:background .5s var(--ease),opacity .5s var(--ease)}
+.node::after{content:"";position:absolute;inset:-9px;border-radius:50%;border:1px solid var(--accent);opacity:0}
+.node.on{border-color:var(--accent);transform:scale(1.08)}
+.node.on::before{background:var(--accent);opacity:1}
+.vis-on .node.on::after{animation:pulse 5s var(--ease-io) infinite;animation-delay:-1.4s}
+@keyframes pulse{0%,100%{opacity:0;transform:scale(.85)}50%{opacity:.7;transform:scale(1.15)}}
+.age{font-family:var(--display);font-weight:900;font-size:clamp(5rem,13vw,11rem);line-height:.8;color:transparent;-webkit-text-stroke:2px var(--text-primary);letter-spacing:.01em;padding-top:.04em}
+.stop h3{font-family:var(--display);font-weight:800;text-transform:uppercase;font-size:clamp(1.9rem,3.6vw,3rem);line-height:1;margin:14px 0 14px}
+.tag{display:inline-block;font-family:var(--mono);font-size:.74rem;letter-spacing:.12em;text-transform:uppercase;color:var(--text-primary);border:1px solid var(--line-strong);border-radius:999px;padding:5px 12px}
+.stop p{color:var(--text-secondary);max-width:38ch}
+.road-note{margin:clamp(30px,4vw,48px) 0 0 96px;color:var(--text-secondary);font-size:1rem;max-width:46ch;padding-left:18px;border-left:2px solid var(--accent)}
+
+/* the family promise */
+.walk{background:linear-gradient(180deg,transparent,rgba(40,50,72,.55) 20%,rgba(40,50,72,.55) 80%,transparent)}
+.walk .sec-head{text-align:center;justify-items:center}
+.promises{display:grid;grid-template-columns:repeat(4,1fr);gap:clamp(12px,1.6vw,22px)}
+.promise{position:relative;padding:28px 24px 32px;border-radius:18px;border:1px solid var(--line-strong);background:rgba(255,255,255,.045);font-size:1.18rem;line-height:1.4;transition:border-color .4s var(--ease),background .4s var(--ease),opacity .9s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--i,0)*100ms)}
+.promise:hover{border-color:var(--accent-hover);background:rgba(255,255,255,.075)}
+.promise b{display:flex;align-items:center;gap:10px;font-family:var(--mono);font-weight:500;font-size:.74rem;letter-spacing:.14em;color:var(--text-secondary);margin-bottom:16px}
+.promise b::before{content:"";width:8px;height:8px;border-radius:50%;background:var(--accent);opacity:.6}
+.vis-on .promise b::before{animation:dotglow 4.6s var(--ease-io) infinite;animation-delay:calc(var(--i,0)*-1.1s)}
+@keyframes dotglow{0%,100%{opacity:.35}50%{opacity:1}}
+@keyframes glow{0%,100%{opacity:.14}50%{opacity:.5}}
+
+/* proof gallery */
+.proof-head{display:grid;grid-template-columns:1.1fr .9fr;gap:clamp(24px,5vw,80px);align-items:end;margin-bottom:clamp(36px,5vw,64px)}
+.gal{display:grid;grid-template-columns:repeat(6,1fr);grid-auto-rows:clamp(130px,19vw,270px);gap:12px}
+.gal figure{position:relative;overflow:hidden;border-radius:18px;background:var(--panel)}
+.gal img{width:100%;height:100%;object-fit:cover;transition:transform 1.2s var(--ease)}
+.gal figure:hover img{transform:scale(1.045)}
+.gal .cap{position:absolute;left:12px;bottom:12px;font-family:var(--mono);font-size:.7rem;letter-spacing:.12em;text-transform:uppercase;padding:6px 10px;border-radius:8px;color:#F4F1EA;background:rgba(8,8,15,.62);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);text-shadow:0 1px 3px rgba(5,5,10,.85)}
+.g1{grid-column:1/5;grid-row:1/3}.g2{grid-column:5/7;grid-row:1}.g3{grid-column:5/7;grid-row:2}
+.g4{grid-column:1/3;grid-row:3/5}.g5{grid-column:3/7;grid-row:3/5}
+.g6{grid-column:1/4;grid-row:5}.g7{grid-column:4/7;grid-row:5}
+.g1 img{object-position:50% 62%}.g2 img{object-position:68% 50%}.g3 img{object-position:60% 55%}.g4 img{object-position:52% 58%}.g5 img{object-position:50% 45%}.g6 img{object-position:50% 70%}.g7 img{object-position:50% 50%}
+.proof-note{margin-top:20px}
+
+/* faq */
+.faq-grid{display:grid;grid-template-columns:.8fr 1.2fr;gap:clamp(28px,6vw,96px);align-items:start}
+.faq-side{position:sticky;top:110px;display:grid;gap:18px}
+
+
+@media (max-width:900px){
+  .promises{grid-template-columns:repeat(2,1fr)}
+  .proof-head,.faq-grid,.join-card{grid-template-columns:1fr}
+  .faq-side{position:static}
+  .stop{grid-template-columns:1fr}
+  .age{font-size:clamp(4.4rem,22vw,7rem)}
+}
+@media (max-width:720px){
+  .road{padding-left:64px;--rail:22px}
+  .node{left:-64px;margin-left:5px}
+  .road-note{margin-left:0}
+  .gal{grid-template-columns:repeat(2,1fr);grid-auto-rows:clamp(130px,38vw,230px)}
+  .g1,.g5{grid-column:1/3;grid-row:auto}
+  .g2,.g3,.g4,.g6,.g7{grid-column:auto;grid-row:auto}
+  .g7{grid-column:1/3}
+}
+@media (max-width:560px){.promises{grid-template-columns:1fr}}
+@media (pointer:coarse){.btn,summary,.field input,.field select{min-height:44px}.btn{display:inline-flex;align-items:center;justify-content:center}}
+
+/* reduced motion: final states, no motion */
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation:none!important;transition:none!important;transition-delay:0s!important;scroll-behavior:auto!important}
+  body{opacity:1}
+  .rvc .rv{opacity:1;transform:none}
+  .road .line{transform:scaleY(1)}
+  .node{border-color:var(--accent)}.node::before{background:var(--accent);opacity:1}
+  .arc path{stroke-dashoffset:0}
+  .dust{display:none}
+  .band .h .w,.band .h .c,.band .sub,.band .actions{opacity:1;transform:none}
+}
+html.pinned .road .line{transform:scaleY(1)}
+html.pinned .node{border-color:var(--accent)}
+html.pinned .node::before{background:var(--accent);opacity:1}
+</style>
+<noscript><style>body{opacity:1}.hero{height:auto}.stage{position:relative;height:auto;min-height:100vh}.poster{background-image:url(assets/hero-ending.jpg)}#hero-video,.ring,.cue,.b1,.b2,.b3{display:none}.band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}.rvc .rv{opacity:1;transform:none}.promise{opacity:1;transform:none}.road .line{transform:scaleY(1)}.static-lines{display:grid;gap:8px;margin-top:24px}</style></noscript>
+</head>
+<body>
+<a class="skip" href="#main">Skip to content</a>
+
+<div class="env" aria-hidden="true">
+  <div class="dust">
+    <i style="--x:6%;--t:46s"></i><i style="--x:14%;--t:62s"></i><i style="--x:23%;--t:54s"></i><i style="--x:31%;--t:70s"></i>
+    <i style="--x:40%;--t:58s"></i><i style="--x:49%;--t:66s"></i><i style="--x:57%;--t:50s"></i><i style="--x:66%;--t:74s"></i>
+    <i style="--x:73%;--t:60s"></i><i style="--x:81%;--t:52s"></i><i style="--x:88%;--t:68s"></i><i style="--x:95%;--t:64s"></i>
+  </div>
+</div>
+
+<nav class="nav" id="nav" aria-label="Main">
+  <div class="wrap">
+    <a class="brand" href="index.html" aria-label="JFW Academy, home">
+      <img src="assets/logo-128.png" width="42" height="42" alt="">
+      JFW <small>Academy</small>
+    </a>
+    <button class="nav-toggle" type="button" aria-expanded="false" aria-controls="navlinks"><span class="sr">Menu</span><i></i><i></i></button>
+    <div class="links" id="navlinks">
+      <a href="teams.html">Teams</a>
+      <a href="coaches.html">Coaches</a>
+      <a href="about.html">About</a>
+      <a href="news.html">News</a>
+      <a href="contact.html">Contact</a>
+      <a class="btn sm" href="#join">Join the founding squad</a>
+    </div>
+  </div>
+</nav>
+
+<main id="main" tabindex="-1">
+
+<section class="hero" id="hero" aria-label="JFW Academy">
+  <h1 class="sr">JFW Academy. Walk out ready.</h1>
+  <div class="stage" id="stage">
+    <div class="poster" id="poster"></div>
+    <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
+    <div class="scrim"></div>
+
+    <div class="band b1" data-a="0" data-b="0.22" data-ramp="0.05" data-fx="depth"><p class="h" data-split>Every player remembers the walk out.</p></div>
+    <div class="band b2" data-a="0.25" data-b="0.47" data-ramp="0.05" data-fx="grid" data-spread="0.5" data-breaks="sentence"><p class="h" data-split>Under 10. Under 12. Under 16. One road.</p></div>
+    <div class="band b3" data-a="0.50" data-b="0.72" data-ramp="0.05" data-fx="punch"><p class="h" data-split data-em="Honest,Every">Clear standards. Honest feedback. Every week.</p></div>
+    <div class="band b4" data-a="0.76" data-b="1" data-ramp="0.06" data-fx="rise">
+      <p class="h" data-split>Walk out ready.</p>
+      <p class="sub">JFW Academy. Founding squads for U10, U12 and U16 are forming now.</p>
+      <div class="actions"><a class="btn" href="#join">Join the founding squad</a></div>
+      <ul class="static-lines" aria-hidden="true">
+        <li>Every player remembers the walk out.</li>
+        <li>Under 10. Under 12. Under 16. One road.</li>
+        <li>Clear standards. Honest feedback. Every week.</li>
+      </ul>
+    </div>
+
+    <svg class="ring" id="ring" viewBox="0 0 48 48" aria-hidden="true"><circle class="back" cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/></svg>
+    <div class="cue mono" id="cue" aria-hidden="true">Scroll to walk out<i></i></div>
+  </div>
+</section>
+
+<section class="trial sec" id="trial" aria-labelledby="trial-h">
+  <div class="wrap rvc">
+    <div class="trial-date rv" style="--i:0">
+      <span class="mono kicker kdot">First trial session</span>
+      <time class="date display" datetime="2026-12-12">Sat 12 Dec</time>
+      <span class="mono">2026</span>
+    </div>
+    <div class="trial-copy rv" style="--i:1">
+      <h2 class="display" id="trial-h">Come and play.</h2>
+      <p>The coach places your child in the squad where they will grow best. We meet at GOR Soemantri Stadium, and we share your squad's session time when you register.</p>
+    </div>
+    <div class="rv" style="--i:2"><a class="btn" href="#join">Join the founding squad</a></div>
+  </div>
+</section>
+
+<section class="sec" id="road" aria-labelledby="road-h">
+  <svg class="arc rvc" aria-hidden="true" viewBox="0 0 78 78"><path d="M2 76A74 74 0 0 1 76 2" fill="none" stroke="currentColor" stroke-width="2" pathLength="1"/></svg>
+  <div class="wrap">
+    <div class="sec-head rvc">
+      <span class="mono kicker rv" style="--i:0">The pathway</span>
+      <h2 class="display rv" style="--i:1" id="road-h">Three steps.<br>One road.</h2>
+      <p class="lede rv" style="--i:2">From first touches to match day, every squad has a clear next step.</p>
+    </div>
+    <ol class="road" id="roadList">
+      <span class="line" id="roadLine"></span>
+      <li class="stop rvc">
+        <span class="node"></span>
+        <div class="age rv" style="--i:0">U10</div>
+        <div><span class="tag rv" style="--i:1">Academy &middot; Foundation</span><h3 class="rv" style="--i:2">Learn the game. Love the game.</h3><p class="rv" style="--i:3">Lots of touches on the ball, and coaches who make training the best hour of the week.</p></div>
+      </li>
+      <li class="stop rvc">
+        <span class="node"></span>
+        <div class="age rv" style="--i:0">U12</div>
+        <div><span class="tag rv" style="--i:1">Academy &middot; Development</span><h3 class="rv" style="--i:2">Build the habits. Earn the shirt.</h3><p class="rv" style="--i:3">First real structure: positions, teamwork and what a standard looks like.</p></div>
+      </li>
+      <li class="stop rvc">
+        <span class="node"></span>
+        <div class="age rv" style="--i:0">U16</div>
+        <div><span class="tag rv" style="--i:1">Club &middot; Competitive</span><h3 class="rv" style="--i:2">Compete. Own it. Play to win.</h3><p class="rv" style="--i:3">Our competitive squad. Match days with real stakes, and honest feedback after every one.</p></div>
+      </li>
+    </ol>
+    <p class="road-note">Squads are launching in stages. Join early and help shape the first year.</p>
+  </div>
+</section>
+
+<section class="sec walk" id="walkout" aria-labelledby="walk-h">
+  <div class="wrap">
+    <div class="sec-head rvc">
+      <span class="mono kicker rv" style="--i:0">The family promise</span>
+      <h2 class="display rv" style="--i:1" id="walk-h">What every family gets.</h2>
+    </div>
+    <ul class="promises rvc">
+      <li class="promise rv" style="--i:0"><b>01</b>You will always know where your child stands.</li>
+      <li class="promise rv" style="--i:1"><b>02</b>Playing time has rules, and we share them first.</li>
+      <li class="promise rv" style="--i:2"><b>03</b>Safe, checked coaches. A named person to call.</li>
+      <li class="promise rv" style="--i:3"><b>04</b>No promises of stardom. Just honest coaching.</li>
+    </ul>
+  </div>
+</section>
+
+<section class="sec light" id="proof" aria-labelledby="proof-h">
+  <svg class="arc rvc" aria-hidden="true" viewBox="0 0 78 78"><path d="M2 76A74 74 0 0 1 76 2" fill="none" stroke="currentColor" stroke-width="2" pathLength="1"/></svg>
+  <div class="wrap">
+    <div class="proof-head rvc">
+      <div class="sec-head" style="margin:0">
+        <span class="mono kicker kdot rv" style="--i:0">We have done this before</span>
+        <h2 class="display rv" style="--i:1" id="proof-h">We have walked out before.</h2>
+      </div>
+      <p class="lede rv" style="--i:2">Our earlier U16 and U18 squads played competitive football. These are their match days.</p>
+    </div>
+    <div class="gal rvc">
+      <figure class="g1 rv" style="--i:0"><img src="assets/trophy-night.jpg" width="1920" height="1280" alt="A JFW squad in black and red training jackets kneeling and standing behind a trophy on a floodlit pitch at night" loading="lazy"><figcaption class="cap">Trophy night</figcaption></figure>
+      <figure class="g2 rv" style="--i:1"><img src="assets/free-kick.jpg" width="1920" height="1204" alt="A JFW player in the black and red kit striking a free kick" loading="lazy"><figcaption class="cap">Free kick</figcaption></figure>
+      <figure class="g3 rv" style="--i:2"><img src="assets/on-the-ball.jpg" width="1920" height="1204" alt="A JFW player in the white and gold kit shielding the ball from an opponent" loading="lazy"><figcaption class="cap">On the ball</figcaption></figure>
+      <figure class="g4 rv" style="--i:3"><img src="assets/after-the-whistle.jpg" width="1920" height="1280" alt="A goalkeeper in red kneeling on the pitch with hands over their face after a match" loading="lazy"><figcaption class="cap">After the whistle</figcaption></figure>
+      <figure class="g5 rv" style="--i:4"><img src="assets/squad-photo.jpg" width="1920" height="1280" alt="A JFW squad in white kits with blue palm prints posing together with their coach and two match balls" loading="lazy"><figcaption class="cap">Squad photo</figcaption></figure>
+      <figure class="g6 rv" style="--i:5"><img src="assets/team-talk.jpg" width="1920" height="1280" alt="JFW players and their coach in a huddle on the pitch for a team talk" loading="lazy"><figcaption class="cap">Team talk</figcaption></figure>
+      <figure class="g7 rv" style="--i:6"><img src="assets/pre-match.jpg" width="1920" height="1280" alt="JFW players in white and gold stretching and getting ready under the team tent before a match" loading="lazy"><figcaption class="cap">Pre-match</figcaption></figure>
+    </div>
+    <p class="mono proof-note">Real photos from our earlier U16 and U18 squads.</p>
+  </div>
+</section>
+
+<section class="sec" id="faq" aria-labelledby="faq-h">
+  <div class="wrap faq-grid">
+    <div class="faq-side rvc">
+      <span class="mono kicker rv" style="--i:0">Questions parents ask</span>
+      <h2 class="display rv" style="--i:1" id="faq-h">Straight answers.</h2>
+      <p class="lede rv" style="--i:2">Choosing an academy is a big call. Here is what we tell every family.</p>
+    </div>
+    <div class="faq-list rvc">
+      <details class="rv" style="--i:0" name="faq"><summary>Is my child safe?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Every coach is checked and trained in child safeguarding, and there is one named person you can call.</p></div></div></details>
+      <details class="rv" style="--i:1" name="faq"><summary>How will I know how my child is doing?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>You get honest feedback after every match, and a clear review each term.</p></div></div></details>
+      <details class="rv" style="--i:2" name="faq"><summary>Will my child actually play?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Minutes depend on effort and standards, and we explain them before you join.</p></div></div></details>
+      <details class="rv" style="--i:3" name="faq"><summary>What if I do not know their level?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Come to a trial. Our first trial session is Saturday, 12 December 2026. The coach places your child where they will grow best.</p></div></div></details>
+      <details class="rv" style="--i:4" name="faq"><summary>What does it cost?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>Fees are shared before you commit. No surprises.</p></div></div></details>
+      <details class="rv" style="--i:5" name="faq"><summary>Can my child get a scholarship?<span class="pm" aria-hidden="true"></span></summary><div class="ans"><div><p>For the U16 squad, scholarships come through trials and scouting. Families can also pay to join the U16 squad.</p></div></div></details>
+    </div>
+  </div>
+</section>
+
+<section class="sec" id="join" aria-labelledby="join-h">
+  <div class="wrap">
+    <div class="join-card rvc" id="joinCard">
+      <div class="join-copy">
+        <span class="mono kicker">The founding squad</span>
+        <h2 class="display" id="join-h">Join the founding squad.</h2>
+        <p class="lede">Tell us about your player. We reply with trial details for Saturday, 12 December 2026.</p>
+        <img src="assets/hero-ending.jpg" width="1912" height="1080" alt="A floodlit stadium pitch at night" loading="lazy">
+        <p class="mono">U10 &middot; U12 &middot; U16</p>
+      </div>
+      <form class="join-form" id="joinForm" novalidate>
+        <div class="field"><label for="f-player">Player's name</label><input id="f-player" name="player" type="text" autocomplete="off" required><span class="err">Please add the player's name.</span></div>
+        <div class="field"><label for="f-age">Age group</label>
+          <select id="f-age" name="age" required><option value="">Choose one</option><option>U10</option><option>U12</option><option>U16</option><option>Not sure</option></select><span class="err">Please choose an age group.</span></div>
+        <div class="field"><label for="f-parent">Your name</label><input id="f-parent" name="parent" type="text" autocomplete="name" required><span class="err">Please add your name.</span></div>
+        <div class="field"><label for="f-note">Anything we should know?</label><textarea id="f-note" name="note"></textarea></div>
+        <button class="btn" type="submit">Join the founding squad</button>
+      </form>
+      <div class="success" id="success" role="status" aria-live="polite">
+        <h3 id="successTitle">Got it.</h3>
+        <p id="successText"></p>
+      </div>
+    </div>
+  </div>
+</section>
+
+</main>
+
+<footer>
+  <div class="wrap foot">
+    <div class="foot-brand">
+      <img src="assets/logo-128.png" width="84" height="84" alt="Jakarta Football Warriors crest" loading="lazy">
+      <div>
+        <p class="display">JFW Academy</p>
+        <p>Jakarta Football Warriors. Founding squads for U10, U12 and U16.</p>
+      </div>
+    </div>
+    <div>
+      <h4>Explore</h4>
+      <ul>
+        <li><a href="teams.html">Teams</a></li>
+        <li><a href="coaches.html">Coaches</a></li>
+        <li><a href="about.html">About</a></li>
+        <li><a href="news.html">News</a></li>
+        <li><a href="contact.html">Contact</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Find us</h4>
+      <ul>
+        <li><a href="mailto:jakartafootballwarrior@gmail.com">jakartafootballwarrior@gmail.com</a></li>
+        <li><a href="https://wa.me/62818105777" rel="noopener" target="_blank">WhatsApp +62 818 105 777</a></li>
+        <li><a href="https://www.instagram.com/jfwfc_/" rel="noopener" target="_blank">Instagram @jfwfc_</a></li>
+        <li><a href="https://www.tiktok.com/@jfwfc_" rel="noopener" target="_blank">TikTok @jfwfc_</a></li>
+      </ul>
+    </div>
+    <p class="foot-base"><span>&copy; 2026 JFW Academy</span><span>Jakarta Football Warriors</span></p>
+  </div>
+</footer>
+
+<script>
+(() => {
+'use strict';
+/* ====== settings ====== */
+const VIDEO_URL = 'assets/hero-scrub.mp4';
+const VIDEO_BYTES = 3230257;
+const POSTER_URL = 'assets/hero-poster.jpg';
+
+const $ = (s, r = document) => r.querySelector(s);
+const $$ = (s, r = document) => [...r.querySelectorAll(s)];
+const clamp = (v, lo, hi) => Math.min(hi, Math.max(lo, v));
+const sm = (p, e0, e1) => { const t = clamp((p - e0) / (e1 - e0), 0, 1); return t * t * (3 - 2 * t); };
+const html = document.documentElement;
+const RM = matchMedia('(prefers-reduced-motion: reduce)');
+
+/* ====== split headline text (seeded, identical on every load) ====== */
+function rng(seed) { let s = seed >>> 0; return () => (s = (s * 1664525 + 1013904223) >>> 0) / 4294967296; }
+function splitText(el, seed) {
+  const band = el.closest('.band');
+  const fx = band.dataset.fx;
+  const spread = parseFloat(band.dataset.spread || '.5');
+  const em = (el.dataset.em || '').split(',').map(s => s.trim().toLowerCase()).filter(Boolean);
+  const text = el.textContent.trim();
+  const words = text.split(/\s+/);
+  const total = text.replace(/\s/g, '').length;
+  const r = rng(seed);
+  const sr = document.createElement('span'); sr.className = 'sr'; sr.textContent = text;
+  const vis = document.createElement('span'); vis.className = 'vis'; vis.setAttribute('aria-hidden', 'true');
+  let ci = 0;
+  words.forEach((word, wi) => {
+    const w = document.createElement('span'); w.className = 'w';
+    if (em.includes(word.replace(/[^\w]/g, '').toLowerCase())) w.classList.add('em');
+    const perWord = fx === 'depth' || fx === 'punch' || fx === 'rise';
+    w.style.setProperty('--th', (perWord ? (wi / words.length) * (fx === 'rise' ? .3 : .42) : 0).toFixed(3));
+    [...word].forEach(chr => {
+      const c = document.createElement('span'); c.className = 'c'; c.textContent = chr;
+      if (fx === 'grid') {
+        c.style.setProperty('--th', ((ci / total) * spread + r() * .06).toFixed(3));
+        c.style.setProperty('--jx', (-70 - r() * 70).toFixed(0) + 'px');
+      }
+      w.appendChild(c); ci++;
+    });
+    vis.appendChild(w);
+    if (band.dataset.breaks === 'sentence' && /\.$/.test(word) && wi < words.length - 1) vis.appendChild(document.createElement('br'));
+    else if (wi < words.length - 1) vis.appendChild(document.createTextNode(' '));
+  });
+  el.textContent = ''; el.append(sr, vis);
+}
+$$('.band').forEach((b, i) => b.classList.add('fx-' + b.dataset.fx));
+$$('[data-split]').forEach((el, i) => splitText(el, 7919 * (i + 3)));
+
+/* node lights */
+const nio = new IntersectionObserver(es => es.forEach(e => { if (e.isIntersecting) { e.target.classList.add('on'); nio.unobserve(e.target); } }), { rootMargin: '0px 0px -38% 0px' });
+$$('.node').forEach(n => nio.observe(n));
+
+/* ====== page scroll: the pitch line ====== */
+const roadList = $('#roadList'); const roadLine = $('#roadLine');
+let lastD = -1;
+function pageScroll() {
+  const r = roadList.getBoundingClientRect();
+  const d = clamp((innerHeight * .62 - r.top) / (r.height * .96), 0, 1);
+  if (Math.abs(d - lastD) > .004 || ((d === 0 || d === 1) && d !== lastD)) { lastD = d; roadLine.style.setProperty('--d', d.toFixed(3)); }
+}
+let ticking = false;
+addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimationFrame(() => { pageScroll(); ticking = false; }); } }, { passive: true });
+addEventListener('resize', pageScroll);
+pageScroll();
+
+/* ====== the scrub hero ====== */
+const hero = $('#hero'), stage = $('#stage'), video = $('#hero-video'), poster = $('#poster'), ring = $('#ring'), cue = $('#cue');
+const bands = $$('.band').map((el, i, arr) => ({
+  el, i, last: i === arr.length - 1,
+  a: +el.dataset.a, b: +el.dataset.b, ramp: +el.dataset.ramp || 0,
+  op: -1, k: -1, vis: null, live: null
+}));
+let heroTop = 0, heroRange = 1;
+function measureHero() {
+  const r = hero.getBoundingClientRect();
+  heroTop = r.top + scrollY; heroRange = Math.max(1, r.height - innerHeight);
+}
+const heroProgress = () => clamp((scrollY - heroTop) / heroRange, 0, 1);
+
+let target = 0, shown = 0, rafId = null, lastTick = 0, heroOnScreen = true, loadK = 0, loadDone = false;
+let cueGone = false;
+
+function updateCaptions(p) {
+  if (!scrubOn) return;
+  for (const b of bands) {
+    const len = b.b - b.a;
+    const f = Math.min(0.036, len / 3);
+    const inE = b.i === 0 ? 1 : sm(p, b.a, b.a + f);
+    const outE = b.last ? 1 : 1 - sm(p, b.b - f, b.b);
+    let op = inE * outE;
+    if (p < b.a - 0.0001 && b.i !== 0) op = 0;
+    if (p > b.b + 0.0001 && !b.last) op = 0;
+    let k = clamp((p - b.a) / (b.ramp || Math.min(0.025, len * .35)), 0, 1);
+    if (b.i === 0) k = Math.max(k, loadK);
+    op = Math.round(op * 1000) / 1000;
+    if (op !== b.op && (Math.abs(op - b.op) > .004 || op === 0 || op === 1)) {
+      b.op = op; b.el.style.opacity = op;
+      const v = op > .01;
+      if (v !== b.vis) { b.vis = v; b.el.style.visibility = v ? 'visible' : 'hidden'; }
+      const l = op > .6;
+      if (l !== b.live) { b.live = l; b.el.classList.toggle('live', l); }
+    }
+    if (Math.abs(k - b.k) >= .008 || ((k === 0 || k === 1) && k !== b.k)) { b.k = k; b.el.style.setProperty('--k', k.toFixed(3)); }
+  }
+  const g = p > .03;
+  if (g !== cueGone) { cueGone = g; cue.classList.toggle('gone', g); }
+}
+
+/* seek gate */
+let seekBusy = false, pendingTime = null;
+function requestSeek(t) {
+  if (!video.duration) return;
+  if (seekBusy) { pendingTime = t; return; }
+  seekBusy = true;
+  video.currentTime = t;
+}
+video.addEventListener('seeked', () => {
+  seekBusy = false;
+  if (pendingTime !== null) { const t = pendingTime; pendingTime = null; requestSeek(t); }
+});
+video.addEventListener('error', () => {
+  seekBusy = false; pendingTime = null;
+  if (video.src && !video.readyState) failVideo();
+});
+
+function tick(now) {
+  const dt = Math.min(100, now - (lastTick || now));
+  lastTick = now;
+  const k = 0.24;
+  shown += (target - shown) * (1 - Math.pow(1 - k, dt / 16.667));
+  if (Math.abs(target - shown) < 0.0005) { shown = target; rafId = null; lastTick = 0; }
+  else rafId = requestAnimationFrame(tick);
+  requestSeek(shown * video.duration);
+  updateCaptions(shown);
+}
+function onScroll() {
+  target = heroProgress();
+  if (rafId === null && heroOnScreen) rafId = requestAnimationFrame(tick);
+}
+new IntersectionObserver(es => es.forEach(e => { heroOnScreen = e.isIntersecting; if (heroOnScreen && scrubOn) onScroll(); }), { threshold: 0 }).observe(hero);
+
+/* blob loader with the honest ring */
+let heroInited = false, heroFailed = false;
+function initHeroOnce() {
+  if (heroInited) return; heroInited = true;
+  poster.style.backgroundImage = "url('" + POSTER_URL + "')";
+  let started = false;
+  const start = () => { if (started) return; started = true; loadHeroBlob().catch(failVideo); };
+  const img = new Image(); img.onload = start; img.onerror = start; img.src = POSTER_URL;
+  setTimeout(start, 4000);
+}
+async function loadHeroBlob() {
+  const ctrl = new AbortController();
+  let watchdog = setTimeout(() => ctrl.abort(), 20000);
+  const res = await fetch(VIDEO_URL, { priority: 'low', signal: ctrl.signal });
+  if (!res.ok) throw new Error('video ' + res.status);
+  const total = Number(res.headers.get('Content-Length')) || VIDEO_BYTES;
+  const reader = res.body.getReader();
+  const chunks = []; let got = 0, lastRing = 0;
+  for (;;) {
+    const { done, value } = await reader.read();
+    if (done) break;
+    clearTimeout(watchdog); watchdog = setTimeout(() => ctrl.abort(), 20000);
+    chunks.push(value); got += value.length;
+    const frac = Math.min(1, got / total);
+    const now = performance.now();
+    if (now - lastRing > 100 || frac === 1) { lastRing = now; ring.style.setProperty('--ld', Math.round(126 * (1 - frac))); }
+  }
+  clearTimeout(watchdog);
+  ring.style.setProperty('--ld', 0);
+  video.src = URL.createObjectURL(new Blob(chunks, { type: 'video/mp4' }));
+  video.load();
+  video.addEventListener('canplay', () => {
+    if (!scrubOn) return;
+    requestSeek(heroProgress() * video.duration);
+    stage.classList.add('video-ready');
+  }, { once: true });
+}
+function failVideo() {
+  if (heroFailed) return;
+  heroFailed = true;
+  stage.classList.add('video-failed');
+  applyHeroMode();
+}
+
+/* live gates: five queries, same strings as the CSS */
+const GATES = [
+  '(max-width: 720px)',
+  '(orientation: portrait) and (max-width: 1024px)',
+  '(orientation: portrait) and (pointer: coarse)',
+  '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)',
+  '(prefers-reduced-motion: reduce)'
+];
+let scrubOn = false;
+function startLoadRamp() {
+  if (loadDone) return; loadDone = true;
+  const t0 = performance.now();
+  const step = now => {
+    const t = clamp((now - t0) / 1400, 0, 1);
+    loadK = 1 - Math.pow(1 - t, 3);
+    if (scrubOn) updateCaptions(shown);
+    if (t < 1) requestAnimationFrame(step);
+  };
+  requestAnimationFrame(step);
+}
+function enableScrub() {
+  if (scrubOn) return; scrubOn = true;
+  measureHero();
+  initHeroOnce();
+  addEventListener('scroll', onScroll, { passive: true });
+  bands.forEach(b => { b.op = -1; b.k = -1; b.vis = null; b.live = null; });
+  target = shown = heroProgress();
+  updateCaptions(shown);
+  if (video.src && video.duration) { requestSeek(shown * video.duration); stage.classList.add('video-ready'); }
+  startLoadRamp();
+  onScroll();
+}
+function disableScrub() {
+  if (!scrubOn && !heroInited) { return; }
+  scrubOn = false;
+  removeEventListener('scroll', onScroll);
+  if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
+  bands.forEach(b => { b.el.style.opacity = ''; b.el.style.visibility = ''; b.el.style.removeProperty('--k'); b.el.classList.remove('live'); b.op = -1; b.k = -1; });
+  poster.style.backgroundImage = '';
+  stage.classList.remove('video-ready');
+  heroInited = false;
+}
+function applyHeroMode() {
+  const gated = GATES.some(q => matchMedia(q).matches);
+  const stat = gated || heroFailed;
+  html.classList.toggle('static', stat);
+  if (stat) disableScrub(); else enableScrub();
+  measureHero(); pageScroll();
+}
+const MQLS = GATES.map(q => matchMedia(q));
+MQLS.forEach(m => m.addEventListener('change', applyHeroMode));
+addEventListener('resize', () => { measureHero(); if (scrubOn) onScroll(); });
+if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measureHero(); if (scrubOn) onScroll(); });
+applyHeroMode();
+
+/* ====== reduced motion, live, both directions ====== */
+function pinToFinalStates() {
+  html.classList.add('pinned');
+  roadLine.style.setProperty('--d', '1');
+}
+function unpinFinalStates() {
+  html.classList.remove('pinned');
+  lastD = -1; pageScroll();
+}
+RM.addEventListener('change', e => { if (e.matches) pinToFinalStates(); else { unpinFinalStates(); applyHeroMode(); } });
+if (RM.matches) pinToFinalStates();
+
+})();
+</script>
+</body>
+</html>
