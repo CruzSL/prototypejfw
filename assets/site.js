@@ -47,7 +47,7 @@ if (nav) {
 /* ====== WhatsApp card appears once a number is set ====== */
 if (WHATSAPP_NUMBER) {
   $$('[data-whatsapp]').forEach(a => {
-    a.href = 'https://wa.me/' + WHATSAPP_NUMBER;
+    a.href = 'https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER;
     a.hidden = false;
   });
 }
@@ -67,14 +67,14 @@ $$('.join-card').forEach(card => {
       if (!v) ok = false;
     });
     if (!ok) { const first = $('.field.bad input, .field.bad select', form); if (first) first.focus(); return; }
-    const msg = 'Hi JFW Academy. I would like to join the founding squad.\nPlayer: ' + player + '\nAge group: ' + age + '\nParent: ' + parent + (note ? '\nNote: ' + note : '');
+    const msg = 'Hi JFW Academy. I would like to join the JFW Squad.\nPlayer: ' + player + '\nAge group: ' + age + '\nParent: ' + parent + (note ? '\nNote: ' + note : '');
     const title = $('.success h3', card), text = $('.success p', card);
     if (WHATSAPP_NUMBER) {
-      window.open('https://wa.me/' + WHATSAPP_NUMBER + '?text=' + encodeURIComponent(msg), '_blank', 'noopener');
+      window.open('https://api.whatsapp.com/send?phone=' + WHATSAPP_NUMBER + '&text=' + encodeURIComponent(msg), '_blank', 'noopener');
       title.textContent = 'Got it.';
       text.textContent = 'WhatsApp opened with your details ready. Press send and we will message you with the trial details soon.';
     } else {
-      window.location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent('Founding squad: ' + player + ' (' + age + ')') + '&body=' + encodeURIComponent(msg);
+      window.location.href = 'mailto:' + CONTACT_EMAIL + '?subject=' + encodeURIComponent('JFW Squad: ' + player + ' (' + age + ')') + '&body=' + encodeURIComponent(msg);
       title.textContent = 'Got it.';
       text.textContent = 'Your email app opened with your details ready. Press send and we will message you with the trial details soon.';
     }

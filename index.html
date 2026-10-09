@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>JFW Academy | Jakarta Football Warriors</title>
-<meta name="description" content="JFW Academy, Jakarta Football Warriors. Founding squads for U10, U12 and U16 are forming now. Join the founding squad.">
+<meta name="description" content="JFW Academy, Jakarta Football Warriors. The JFW Squad is forming now for U10, U12 and U16. Join the JFW Squad.">
 <meta name="theme-color" content="#161C2A">
 <meta name="color-scheme" content="dark">
 <!-- PREVIEW ONLY: remove the next tag at the real launch -->
@@ -13,7 +13,7 @@
 <!-- DEPLOY STEP: patch og:url and og:image with the live absolute URL before zipping -->
 <meta property="og:type" content="website">
 <meta property="og:title" content="JFW Academy | Walk out ready.">
-<meta property="og:description" content="Founding squads for U10, U12 and U16 are forming now.">
+<meta property="og:description" content="The JFW Squad is forming now for U10, U12 and U16.">
 <meta property="og:url" content="https://cruzsl.github.io/prototypejfw/">
 <meta property="og:image" content="https://cruzsl.github.io/prototypejfw/assets/hero-ending.jpg">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -27,8 +27,8 @@
 .hero{position:relative;height:600vh}
 .stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:var(--canvas)}
 .poster{position:absolute;inset:0;background-size:cover;background-position:center}
-#hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transform:translateZ(0);will-change:transform;transition:opacity .8s var(--ease)}
-.stage.video-ready #hero-video{opacity:1}
+#hero-canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s var(--ease)}
+.stage.video-ready #hero-canvas{opacity:1}
 .scrim{position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(10,10,18,0) 38%,rgba(10,10,18,.46) 100%)}
 .band{position:absolute;z-index:3;opacity:0;visibility:hidden;pointer-events:none;text-shadow:var(--tshadow);width:min(31vw,28rem)}
 .band.live{pointer-events:auto}
@@ -73,7 +73,7 @@
   .hero{height:auto}
   .stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
   .poster{background-image:url('assets/hero-ending.jpg')}
-  #hero-video,.ring,.cue,.b1,.b2,.b3{display:none}
+  #hero-canvas,.ring,.cue,.b1,.b2,.b3{display:none}
   .band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}
   .band .h{font-size:clamp(3rem,12.5vw,5.6rem)}
   .static-lines{display:grid;gap:8px;margin:26px auto 0;max-width:30rem}
@@ -82,7 +82,7 @@
 html.static .hero{height:auto}
 html.static .stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
 html.static .poster{background-image:url('assets/hero-ending.jpg')}
-html.static #hero-video,html.static .ring,html.static .cue,html.static .b1,html.static .b2,html.static .b3{display:none}
+html.static #hero-canvas,html.static .ring,html.static .cue,html.static .b1,html.static .b2,html.static .b3{display:none}
 html.static .band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}
 html.static .band .h{font-size:clamp(3rem,12.5vw,5.6rem)}
 html.static .static-lines{display:grid;gap:8px;margin:26px auto 0;max-width:30rem}
@@ -184,7 +184,7 @@ html.pinned .road .line{transform:scaleY(1)}
 html.pinned .node{border-color:var(--accent)}
 html.pinned .node::before{background:var(--accent);opacity:1}
 </style>
-<noscript><style>body{opacity:1}.hero{height:auto}.stage{position:relative;height:auto;min-height:100vh}.poster{background-image:url(assets/hero-ending.jpg)}#hero-video,.ring,.cue,.b1,.b2,.b3{display:none}.band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}.rvc .rv{opacity:1;transform:none}.promise{opacity:1;transform:none}.road .line{transform:scaleY(1)}.static-lines{display:grid;gap:8px;margin-top:24px}</style></noscript>
+<noscript><style>body{opacity:1}.hero{height:auto}.stage{position:relative;height:auto;min-height:100vh}.poster{background-image:url(assets/hero-ending.jpg)}#hero-canvas,.ring,.cue,.b1,.b2,.b3{display:none}.band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}.rvc .rv{opacity:1;transform:none}.promise{opacity:1;transform:none}.road .line{transform:scaleY(1)}.static-lines{display:grid;gap:8px;margin-top:24px}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -209,7 +209,7 @@ html.pinned .node::before{background:var(--accent);opacity:1}
       <a href="about.html">About</a>
       <a href="news.html">News</a>
       <a href="contact.html">Contact</a>
-      <a class="btn sm" href="#join">Join the founding squad</a>
+      <a class="btn sm" href="#join">Join the JFW Squad</a>
     </div>
   </div>
 </nav>
@@ -220,7 +220,7 @@ html.pinned .node::before{background:var(--accent);opacity:1}
   <h1 class="sr">JFW Academy. Walk out ready.</h1>
   <div class="stage" id="stage">
     <div class="poster" id="poster"></div>
-    <video id="hero-video" preload="none" muted playsinline aria-hidden="true" tabindex="-1"></video>
+    <canvas id="hero-canvas" width="1280" height="724" aria-hidden="true"></canvas>
     <div class="scrim"></div>
 
     <div class="band b1" data-a="0" data-b="0.22" data-ramp="0.05" data-fx="depth"><p class="h" data-split>Every player remembers the walk out.</p></div>
@@ -228,8 +228,8 @@ html.pinned .node::before{background:var(--accent);opacity:1}
     <div class="band b3" data-a="0.50" data-b="0.72" data-ramp="0.05" data-fx="punch"><p class="h" data-split data-em="Honest,Every">Clear standards. Honest feedback. Every week.</p></div>
     <div class="band b4" data-a="0.76" data-b="1" data-ramp="0.06" data-fx="rise">
       <p class="h" data-split>Walk out ready.</p>
-      <p class="sub">JFW Academy. Founding squads for U10, U12 and U16 are forming now.</p>
-      <div class="actions"><a class="btn" href="#join">Join the founding squad</a></div>
+      <p class="sub">JFW Academy. The JFW Squad is forming now for U10, U12 and U16.</p>
+      <div class="actions"><a class="btn" href="#join">Join the JFW Squad</a></div>
       <ul class="static-lines" aria-hidden="true">
         <li>Every player remembers the walk out.</li>
         <li>Under 10. Under 12. Under 16. One road.</li>
@@ -253,7 +253,7 @@ html.pinned .node::before{background:var(--accent);opacity:1}
       <h2 class="display" id="trial-h">Come and play.</h2>
       <p>The coach places your child in the squad where they will grow best. We meet at GOR Soemantri Stadium, and we share your squad's session time when you register.</p>
     </div>
-    <div class="rv" style="--i:2"><a class="btn" href="#join">Join the founding squad</a></div>
+    <div class="rv" style="--i:2"><a class="btn" href="#join">Join the JFW Squad</a></div>
   </div>
 </section>
 
@@ -347,8 +347,8 @@ html.pinned .node::before{background:var(--accent);opacity:1}
   <div class="wrap">
     <div class="join-card rvc" id="joinCard">
       <div class="join-copy">
-        <span class="mono kicker">The founding squad</span>
-        <h2 class="display" id="join-h">Join the founding squad.</h2>
+        <span class="mono kicker">The JFW Squad</span>
+        <h2 class="display" id="join-h">Join the JFW Squad.</h2>
         <p class="lede">Tell us about your player. We reply with trial details for Saturday, 12 December 2026.</p>
         <img src="assets/hero-ending.jpg" width="1912" height="1080" alt="A floodlit stadium pitch at night" loading="lazy">
         <p class="mono">U10 &middot; U12 &middot; U16</p>
@@ -359,7 +359,7 @@ html.pinned .node::before{background:var(--accent);opacity:1}
           <select id="f-age" name="age" required><option value="">Choose one</option><option>U10</option><option>U12</option><option>U16</option><option>Not sure</option></select><span class="err">Please choose an age group.</span></div>
         <div class="field"><label for="f-parent">Your name</label><input id="f-parent" name="parent" type="text" autocomplete="name" required><span class="err">Please add your name.</span></div>
         <div class="field"><label for="f-note">Anything we should know?</label><textarea id="f-note" name="note"></textarea></div>
-        <button class="btn" type="submit">Join the founding squad</button>
+        <button class="btn" type="submit">Join the JFW Squad</button>
       </form>
       <div class="success" id="success" role="status" aria-live="polite">
         <h3 id="successTitle">Got it.</h3>
@@ -377,7 +377,7 @@ html.pinned .node::before{background:var(--accent);opacity:1}
       <img src="assets/logo-128.png" width="84" height="84" alt="Jakarta Football Warriors crest" loading="lazy">
       <div>
         <p class="display">JFW Academy</p>
-        <p>Jakarta Football Warriors. Founding squads for U10, U12 and U16.</p>
+        <p>Jakarta Football Warriors. The JFW Squad for U10, U12 and U16.</p>
       </div>
     </div>
     <div>
@@ -394,7 +394,7 @@ html.pinned .node::before{background:var(--accent);opacity:1}
       <h4>Find us</h4>
       <ul>
         <li><a href="mailto:jakartafootballwarrior@gmail.com">jakartafootballwarrior@gmail.com</a></li>
-        <li><a href="https://wa.me/62818105777" rel="noopener" target="_blank">WhatsApp +62 818 105 777</a></li>
+        <li><a href="https://api.whatsapp.com/send?phone=62818105777" rel="noopener" target="_blank">WhatsApp +62 818 105 777</a></li>
         <li><a href="https://www.instagram.com/jfwfc_/" rel="noopener" target="_blank">Instagram @jfwfc_</a></li>
         <li><a href="https://www.tiktok.com/@jfwfc_" rel="noopener" target="_blank">TikTok @jfwfc_</a></li>
       </ul>
@@ -407,8 +407,6 @@ html.pinned .node::before{background:var(--accent);opacity:1}
 (() => {
 'use strict';
 /* ====== settings ====== */
-const VIDEO_URL = 'assets/hero-scrub.mp4';
-const VIDEO_BYTES = 3230257;
 const POSTER_URL = 'assets/hero-poster.jpg';
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -472,7 +470,7 @@ addEventListener('resize', pageScroll);
 pageScroll();
 
 /* ====== the scrub hero ====== */
-const hero = $('#hero'), stage = $('#stage'), video = $('#hero-video'), poster = $('#poster'), ring = $('#ring'), cue = $('#cue');
+const hero = $('#hero'), stage = $('#stage'), canvas = $('#hero-canvas'), poster = $('#poster'), ring = $('#ring'), cue = $('#cue');
 const bands = $$('.band').map((el, i, arr) => ({
   el, i, last: i === arr.length - 1,
   a: +el.dataset.a, b: +el.dataset.b, ramp: +el.dataset.ramp || 0,
@@ -514,23 +512,46 @@ function updateCaptions(p) {
   if (g !== cueGone) { cueGone = g; cue.classList.toggle('gone', g); }
 }
 
-/* seek gate */
-let seekBusy = false, pendingTime = null;
-function requestSeek(t) {
-  if (!video.duration) return;
-  if (seekBusy) { pendingTime = t; return; }
-  seekBusy = true;
-  video.currentTime = t;
+/* frame engine: 145 stills drawn to a canvas, no video decoder involved */
+const FRAME_COUNT = 145, KEY_STEP = 12, DECODE_RADIUS = 12, KEEP_RADIUS = 14;
+const frameUrl = i => 'assets/frames/f' + String(i).padStart(3, '0') + '.webp';
+const frameBlobs = new Array(FRAME_COUNT).fill(null);   // compressed stills, about 27 KB each
+const frameBmps = new Array(FRAME_COUNT).fill(null);    // decoded stills, kept only near the playhead
+const decoding = new Set();
+let framesLoaded = 0, framesReady = false, loaderStarted = false, wantIdx = -1, drawnIdx = -1;
+const ctx = canvas.getContext('2d', { alpha: false });
+function nearestReadyIndex(i) {
+  if (frameBmps[i]) return i;
+  for (let d = 1; d < FRAME_COUNT; d++) {
+    if (i - d >= 0 && frameBmps[i - d]) return i - d;
+    if (i + d < FRAME_COUNT && frameBmps[i + d]) return i + d;
+  }
+  return -1;
 }
-video.addEventListener('seeked', () => {
-  seekBusy = false;
-  if (pendingTime !== null) { const t = pendingTime; pendingTime = null; requestSeek(t); }
-});
-video.addEventListener('error', () => {
-  seekBusy = false; pendingTime = null;
-  if (video.src && !video.readyState) failVideo();
-});
-
+function paint() {
+  const best = nearestReadyIndex(wantIdx);
+  if (best < 0 || best === drawnIdx) return;
+  drawnIdx = best;
+  ctx.drawImage(frameBmps[best], 0, 0, canvas.width, canvas.height);
+}
+function decodeFrame(i) {
+  if (i < 0 || i >= FRAME_COUNT || frameBmps[i] || !frameBlobs[i] || decoding.has(i) || decoding.size >= 6) return;
+  decoding.add(i);
+  createImageBitmap(frameBlobs[i]).then(bmp => { decoding.delete(i); frameBmps[i] = bmp; paint(); pump(); }).catch(() => decoding.delete(i));
+}
+function pump() {
+  if (wantIdx < 0) return;
+  for (let d = 0; d <= DECODE_RADIUS; d++) { decodeFrame(wantIdx + d); if (d) decodeFrame(wantIdx - d); }
+  for (let i = 0; i < FRAME_COUNT; i++) {
+    const b = frameBmps[i];
+    if (b && Math.abs(i - wantIdx) > KEEP_RADIUS && i % KEY_STEP !== 0) { b.close(); frameBmps[i] = null; if (drawnIdx === i) drawnIdx = -1; }
+  }
+}
+function drawFrame(p) {
+  const i = clamp(Math.round(p * (FRAME_COUNT - 1)), 0, FRAME_COUNT - 1);
+  if (i !== wantIdx) { wantIdx = i; pump(); }
+  paint();
+}
 function tick(now) {
   const dt = Math.min(100, now - (lastTick || now));
   lastTick = now;
@@ -538,7 +559,7 @@ function tick(now) {
   shown += (target - shown) * (1 - Math.pow(1 - k, dt / 16.667));
   if (Math.abs(target - shown) < 0.0005) { shown = target; rafId = null; lastTick = 0; }
   else rafId = requestAnimationFrame(tick);
-  requestSeek(shown * video.duration);
+  drawFrame(shown);
   updateCaptions(shown);
 }
 function onScroll() {
@@ -547,42 +568,51 @@ function onScroll() {
 }
 new IntersectionObserver(es => es.forEach(e => { heroOnScreen = e.isIntersecting; if (heroOnScreen && scrubOn) onScroll(); }), { threshold: 0 }).observe(hero);
 
-/* blob loader with the honest ring */
+/* frame loader with the honest ring: stills load in passes (every 12th, 4th, 2nd, then the rest) */
 let heroInited = false, heroFailed = false;
 function initHeroOnce() {
   if (heroInited) return; heroInited = true;
   poster.style.backgroundImage = "url('" + POSTER_URL + "')";
   let started = false;
-  const start = () => { if (started) return; started = true; loadHeroBlob().catch(failVideo); };
+  const start = () => { if (started) return; started = true; loadFrames().catch(failVideo); };
   const img = new Image(); img.onload = start; img.onerror = start; img.src = POSTER_URL;
   setTimeout(start, 4000);
 }
-async function loadHeroBlob() {
-  const ctrl = new AbortController();
-  let watchdog = setTimeout(() => ctrl.abort(), 20000);
-  const res = await fetch(VIDEO_URL, { priority: 'low', signal: ctrl.signal });
-  if (!res.ok) throw new Error('video ' + res.status);
-  const total = Number(res.headers.get('Content-Length')) || VIDEO_BYTES;
-  const reader = res.body.getReader();
-  const chunks = []; let got = 0, lastRing = 0;
-  for (;;) {
-    const { done, value } = await reader.read();
-    if (done) break;
-    clearTimeout(watchdog); watchdog = setTimeout(() => ctrl.abort(), 20000);
-    chunks.push(value); got += value.length;
-    const frac = Math.min(1, got / total);
-    const now = performance.now();
-    if (now - lastRing > 100 || frac === 1) { lastRing = now; ring.style.setProperty('--ld', Math.round(126 * (1 - frac))); }
+async function fetchFrame(i) {
+  for (let attempt = 0; attempt < 2; attempt++) {
+    try {
+      const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 20000);
+      const res = await fetch(frameUrl(i), { signal: ctrl.signal }); clearTimeout(to);
+      if (!res.ok) throw new Error('frame ' + res.status);
+      return await res.blob();
+    } catch (e) { if (attempt === 1) throw e; }
   }
-  clearTimeout(watchdog);
+}
+async function loadFrames() {
+  if (loaderStarted) return; loaderStarted = true;
+  const order = [];
+  for (const step of [12, 4, 2, 1]) for (let i = 0; i < FRAME_COUNT; i += step) if (!order.includes(i)) order.push(i);
+  const needed = Math.ceil(FRAME_COUNT / 2);
+  let next = 0, lastRing = 0, dead = false;
+  const worker = async () => {
+    while (!dead) {
+      const n = next++; if (n >= order.length) return;
+      const i = order[n];
+      try { frameBlobs[i] = await fetchFrame(i); } catch (e) { if (i === 0) { dead = true; throw e; } continue; }
+      framesLoaded++;
+      const now = performance.now();
+      if (now - lastRing > 100 || framesLoaded === needed) { lastRing = now; ring.style.setProperty('--ld', Math.round(126 * (1 - Math.min(1, framesLoaded / needed)))); }
+      if (!framesReady && framesLoaded >= needed && frameBlobs[0]) becomeReady();
+    }
+  };
+  await Promise.all(Array.from({ length: 8 }, worker));
+  if (!framesReady) throw new Error('not enough frames');
+}
+function becomeReady() {
+  framesReady = true;
   ring.style.setProperty('--ld', 0);
-  video.src = URL.createObjectURL(new Blob(chunks, { type: 'video/mp4' }));
-  video.load();
-  video.addEventListener('canplay', () => {
-    if (!scrubOn) return;
-    requestSeek(heroProgress() * video.duration);
-    stage.classList.add('video-ready');
-  }, { once: true });
+  for (let i = 0; i < FRAME_COUNT; i += KEY_STEP) decodeFrame(i);
+  if (scrubOn) { wantIdx = -1; drawFrame(shown); stage.classList.add('video-ready'); }
 }
 function failVideo() {
   if (heroFailed) return;
@@ -619,7 +649,7 @@ function enableScrub() {
   bands.forEach(b => { b.op = -1; b.k = -1; b.vis = null; b.live = null; });
   target = shown = heroProgress();
   updateCaptions(shown);
-  if (video.src && video.duration) { requestSeek(shown * video.duration); stage.classList.add('video-ready'); }
+  if (framesReady) { drawFrame(shown); stage.classList.add('video-ready'); }
   startLoadRamp();
   onScroll();
 }
