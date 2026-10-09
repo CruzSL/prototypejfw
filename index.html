@@ -23,16 +23,18 @@
 <script src="assets/site.js" defer></script>
 <style>
 
-/* ---------- hero (scrub mode) ---------- */
-.hero{position:relative;height:600vh}
-.stage{position:sticky;top:0;height:100vh;height:100dvh;overflow:hidden;background:var(--canvas)}
+/* ---------- hero: the walk-out plays by itself ---------- */
+.hero{position:relative;height:100vh;height:100svh;min-height:520px}
+.stage{position:absolute;inset:0;overflow:hidden;background:var(--canvas)}
 .poster{position:absolute;inset:0;background-size:cover;background-position:center}
-#hero-canvas{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s var(--ease)}
-.stage.video-ready #hero-canvas{opacity:1}
+#hero-video{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;opacity:0;transition:opacity .8s var(--ease)}
+.stage.video-ready #hero-video{opacity:1}
 .scrim{position:absolute;inset:0;pointer-events:none;z-index:2;background:radial-gradient(ellipse 120% 90% at 50% 45%,rgba(10,10,18,0) 38%,rgba(10,10,18,.46) 100%)}
-.band{position:absolute;z-index:3;opacity:0;visibility:hidden;pointer-events:none;text-shadow:var(--tshadow);width:min(31vw,28rem)}
+.band{position:absolute;z-index:3;opacity:0;visibility:hidden;pointer-events:none;text-shadow:var(--tshadow);width:min(31vw,28rem);transition:opacity .6s var(--ease),visibility 0s linear .6s}
+.band.on{opacity:1;visibility:visible;transition:opacity .5s var(--ease),visibility 0s}
 .band.live{pointer-events:auto}
-.band::before{content:"";position:absolute;z-index:-1;inset:-34% -42%;pointer-events:none;opacity:calc(.25 + .75*var(--k,1));background:radial-gradient(ellipse 74% 62% at 50% 50%,rgba(5,5,10,var(--s0,.78)) 0%,rgba(5,5,10,var(--s1,.54)) 46%,rgba(5,5,10,0) 76%)}
+.band::before{content:"";position:absolute;z-index:-1;inset:-34% -42%;pointer-events:none;opacity:0;transition:opacity .9s var(--ease);background:radial-gradient(ellipse 74% 62% at 50% 50%,rgba(5,5,10,var(--s0,.78)) 0%,rgba(5,5,10,var(--s1,.54)) 46%,rgba(5,5,10,0) 76%)}
+.band.on::before{opacity:1}
 .b3{--s0:.9;--s1:.68}
 .b1{left:5.5vw;top:50%;transform:translateY(-50%)}
 .b2{right:5.5vw;top:50%;transform:translateY(-50%);text-align:right}
@@ -50,45 +52,64 @@
 .band .btn{text-shadow:none;pointer-events:auto}
 .static-lines{display:none}
 
-/* entrance personalities, all transform and opacity, scrubbed off --k */
-.fx-depth .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);transform:scale(calc(.82 + .18*var(--kc)))}
-.fx-grid .c{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.6,1);opacity:var(--kc);transform:translateX(calc((1 - var(--kc))*var(--jx,0px)))}
-.fx-punch .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*3,1);--ks:clamp(0,(var(--k,0) - var(--th,0) - var(--sd,.1))*var(--ss,3.2),1);opacity:var(--kc);transform:scale(calc(.6 + (.4 + var(--ov,.12))*var(--kc) - var(--ov,.12)*var(--ks)))}
-.fx-punch .w.em{--ov:.24;--sd:.16;--ss:2.6;color:#fff}
-.fx-rise .w{--kc:clamp(0,(var(--k,0) - var(--th,0))*2.8,1);opacity:var(--kc);transform:translateY(calc((1 - var(--kc))*30px))}
-.b4 .sub{--ks:clamp(0,(var(--k,0) - .66)*4,1);opacity:var(--ks);transform:translateY(calc((1 - var(--ks))*14px))}
-.b4 .actions{--kb:clamp(0,(var(--k,0) - .78)*5,1);opacity:var(--kb);transform:translateY(calc((1 - var(--kb))*14px))}
+/* entrances: transform and opacity only, run by the browser's compositor */
+.fx-depth .w{opacity:0;transform:scale(.82);transition:opacity .7s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--th,0)*1.3s)}
+.fx-depth.on .w{opacity:1;transform:none}
+.fx-grid .c{opacity:0;transform:translateX(var(--jx,-80px));transition:opacity .6s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--th,0)*1.2s)}
+.fx-grid.on .c{opacity:1;transform:none}
+.fx-punch .w{opacity:0;transform:scale(.6);transition:opacity .35s var(--ease),transform .75s cubic-bezier(.3,1.7,.5,1);transition-delay:calc(var(--th,0)*1.4s)}
+.fx-punch.on .w{opacity:1;transform:none}
+.fx-punch .w.em{color:#fff}
+.fx-rise .w{opacity:0;transform:translateY(30px);transition:opacity .7s var(--ease),transform .9s var(--ease);transition-delay:calc(var(--th,0)*1.2s)}
+.fx-rise.on .w{opacity:1;transform:none}
+.b4 .sub{opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease) .9s,transform .8s var(--ease) .9s}
+.b4.on .sub{opacity:1;transform:none}
+.b4 .actions{opacity:0;transform:translateY(14px);transition:opacity .8s var(--ease) 1.4s,transform .8s var(--ease) 1.4s}
+.b4.on .actions{opacity:1;transform:none}
+.band:not(.on) .w,.band:not(.on) .c,.band:not(.on) .sub,.band:not(.on) .actions{transition-delay:0s}
 
-.ring{position:absolute;z-index:4;left:50%;bottom:calc(max(7vh,48px) + 44px);width:38px;height:38px;margin-left:-19px;color:var(--text-primary);transform:rotate(-90deg);opacity:.85;transition:opacity .6s var(--ease)}
-.ring .back{opacity:.22}
-.stage.video-ready .ring,.stage.video-failed .ring{opacity:0;pointer-events:none}
-.cue{position:absolute;z-index:4;left:50%;bottom:max(5vh,32px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;text-shadow:var(--tshadow);transition:opacity .5s var(--ease)}
-.cue.gone{opacity:0}
+.skip-intro{position:absolute;z-index:5;right:var(--gutter);bottom:max(4vh,24px);font-family:var(--mono);font-size:.74rem;letter-spacing:.14em;text-transform:uppercase;color:var(--text-primary);background:rgba(8,8,15,.55);border:1px solid var(--line-strong);border-radius:999px;padding:11px 18px;cursor:pointer;opacity:0;pointer-events:none;transition:opacity .6s var(--ease),background .3s var(--ease)}
+.skip-intro:hover{background:rgba(8,8,15,.8)}
+.stage.playing .skip-intro{opacity:1;pointer-events:auto}
+.cue{position:absolute;z-index:4;left:50%;bottom:max(5vh,32px);transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;text-shadow:var(--tshadow);opacity:0;transition:opacity .8s var(--ease) 1.2s}
+.stage.done .cue{opacity:1}
 .cue i{display:block;width:1px;height:34px;background:linear-gradient(var(--text-primary),transparent);transform-origin:top;animation:cue 2.6s var(--ease-io) infinite;animation-delay:-1.1s}
 @keyframes cue{0%{transform:scaleY(.15);opacity:.2}55%{transform:scaleY(1);opacity:1}100%{transform:scaleY(1);opacity:0}}
-@media (max-height:560px){.cue,.ring{display:none}}
+@media (max-height:560px){.cue{display:none}}
 
-/* ---------- static hero (phones, portrait tablets, reduced motion, failed video) ---------- */
-@media (max-width:720px),(orientation:portrait) and (max-width:1024px),(orientation:portrait) and (pointer:coarse),(orientation:landscape) and (pointer:coarse) and (max-height:560px),(prefers-reduced-motion:reduce){
+/* phones and narrow screens: captions sit centred low in the frame */
+@media (max-width:720px){
+  .b1,.b2,.b3{left:50%;right:auto;top:auto;bottom:15vh;transform:translateX(-50%);width:88vw;text-align:center}
+  .band .h{font-size:clamp(2.6rem,12.6vw,4.4rem)}
+  .b4 .h{font-size:clamp(3rem,13.4vw,5.2rem)}
+  .b1::before,.b2::before,.b3::before{inset:-34% -60%;background:linear-gradient(180deg,rgba(5,5,10,0) 0%,rgba(5,5,10,.9) 26%,rgba(5,5,10,.9) 74%,rgba(5,5,10,0) 100%)}
+  .b3::before{background:linear-gradient(180deg,rgba(5,5,10,0) 0%,rgba(5,5,10,.95) 24%,rgba(5,5,10,.95) 76%,rgba(5,5,10,0) 100%)}
+  .skip-intro{bottom:max(3vh,18px)}
+}
+
+/* ---------- still hero: reduced motion, data saver, slow connections, failed video ---------- */
+@media (prefers-reduced-motion:reduce){
   .hero{height:auto}
-  .stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
+  .stage{position:relative;min-height:100vh;min-height:100svh}
   .poster{background-image:url('assets/hero-ending.jpg')}
-  #hero-canvas,.ring,.cue,.b1,.b2,.b3{display:none}
-  .band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}
-  .band .h{font-size:clamp(3rem,12.5vw,5.6rem)}
+  #hero-video,.cue,.skip-intro,.b1,.b2,.b3{display:none}
+  .band.b4{opacity:1;visibility:visible;pointer-events:auto}
+  .band.b4 .w,.band.b4 .c,.band.b4 .sub,.band.b4 .actions{opacity:1;transform:none;transition:none}
+  .band.b4::before{opacity:1}
   .static-lines{display:grid;gap:8px;margin:26px auto 0;max-width:30rem}
   .static-lines li{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-primary);background:rgba(8,8,15,.55);border:1px solid rgba(96,96,126,.3);border-radius:10px;padding:9px 12px;backdrop-filter:blur(10px);text-shadow:0 1px 3px rgba(5,5,10,.85)}
 }
 html.static .hero{height:auto}
-html.static .stage{position:relative;height:auto;min-height:100vh;min-height:100svh}
+html.static .stage{position:relative;min-height:100vh;min-height:100svh}
 html.static .poster{background-image:url('assets/hero-ending.jpg')}
-html.static #hero-canvas,html.static .ring,html.static .cue,html.static .b1,html.static .b2,html.static .b3{display:none}
-html.static .band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}
-html.static .band .h{font-size:clamp(3rem,12.5vw,5.6rem)}
+html.static #hero-video,html.static .cue,html.static .skip-intro,html.static .b1,html.static .b2,html.static .b3{display:none}
+html.static .band.b4{opacity:1;visibility:visible;pointer-events:auto}
+html.static .band.b4 .w,html.static .band.b4 .c,html.static .band.b4 .sub,html.static .band.b4 .actions{opacity:1;transform:none;transition:none}
+html.static .band.b4::before{opacity:1}
 html.static .static-lines{display:grid;gap:8px;margin:26px auto 0;max-width:30rem}
 html.static .static-lines li{font-family:var(--mono);font-size:.74rem;letter-spacing:.1em;text-transform:uppercase;color:var(--text-primary);background:rgba(8,8,15,.55);border:1px solid rgba(96,96,126,.3);border-radius:10px;padding:9px 12px;backdrop-filter:blur(10px);text-shadow:0 1px 3px rgba(5,5,10,.85)}
+html.static .band .h{font-size:clamp(3rem,12.5vw,5.6rem)}
 @media (min-width:721px){html.static .band .h{font-size:clamp(3.2rem,8vw,7.4rem)}}
-
 
 /* trial day banner */
 .trial.sec{padding:clamp(44px,6vw,80px) 0;background:linear-gradient(100deg,rgba(216,40,59,.34),rgba(216,40,59,.10) 52%,rgba(110,150,225,.16));border-block:1px solid var(--line)}
@@ -184,7 +205,7 @@ html.pinned .road .line{transform:scaleY(1)}
 html.pinned .node{border-color:var(--accent)}
 html.pinned .node::before{background:var(--accent);opacity:1}
 </style>
-<noscript><style>body{opacity:1}.hero{height:auto}.stage{position:relative;height:auto;min-height:100vh}.poster{background-image:url(assets/hero-ending.jpg)}#hero-canvas,.ring,.cue,.b1,.b2,.b3{display:none}.band.b4{opacity:1;visibility:visible;pointer-events:auto;--k:1}.rvc .rv{opacity:1;transform:none}.promise{opacity:1;transform:none}.road .line{transform:scaleY(1)}.static-lines{display:grid;gap:8px;margin-top:24px}</style></noscript>
+<noscript><style>body{opacity:1}.hero{height:auto}.stage{position:relative;min-height:100vh}.poster{background-image:url(assets/hero-ending.jpg)}#hero-video,.cue,.skip-intro,.b1,.b2,.b3{display:none}.band.b4{opacity:1;visibility:visible;pointer-events:auto}.band.b4 .w,.band.b4 .c,.band.b4 .sub,.band.b4 .actions{opacity:1;transform:none}.band.b4::before{opacity:1}.rvc .rv{opacity:1;transform:none}.promise{opacity:1;transform:none}.road .line{transform:scaleY(1)}.static-lines{display:grid;gap:8px;margin-top:24px}</style></noscript>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -220,13 +241,13 @@ html.pinned .node::before{background:var(--accent);opacity:1}
   <h1 class="sr">JFW Academy. Walk out ready.</h1>
   <div class="stage" id="stage">
     <div class="poster" id="poster"></div>
-    <canvas id="hero-canvas" width="1280" height="724" aria-hidden="true"></canvas>
+    <video id="hero-video" muted playsinline preload="auto" aria-hidden="true" tabindex="-1"></video>
     <div class="scrim"></div>
 
-    <div class="band b1" data-a="0" data-b="0.22" data-ramp="0.05" data-fx="depth"><p class="h" data-split>Every player remembers the walk out.</p></div>
-    <div class="band b2" data-a="0.25" data-b="0.47" data-ramp="0.05" data-fx="grid" data-spread="0.5" data-breaks="sentence"><p class="h" data-split>Under 10. Under 12. Under 16. One road.</p></div>
-    <div class="band b3" data-a="0.50" data-b="0.72" data-ramp="0.05" data-fx="punch"><p class="h" data-split data-em="Honest,Every">Clear standards. Honest feedback. Every week.</p></div>
-    <div class="band b4" data-a="0.76" data-b="1" data-ramp="0.06" data-fx="rise">
+    <div class="band b1" data-a="0" data-b="0.22" data-fx="depth"><p class="h" data-split>Every player remembers the walk out.</p></div>
+    <div class="band b2" data-a="0.25" data-b="0.47" data-fx="grid" data-spread="0.5" data-breaks="sentence"><p class="h" data-split>Under 10. Under 12. Under 16. One road.</p></div>
+    <div class="band b3" data-a="0.50" data-b="0.72" data-fx="punch"><p class="h" data-split data-em="Honest,Every">Clear standards. Honest feedback. Every week.</p></div>
+    <div class="band b4" data-a="0.76" data-b="1" data-fx="rise">
       <p class="h" data-split>Walk out ready.</p>
       <p class="sub">JFW Academy. The JFW Squad is forming now for U10, U12 and U16.</p>
       <div class="actions"><a class="btn" href="#join">Join the JFW Squad</a></div>
@@ -237,8 +258,8 @@ html.pinned .node::before{background:var(--accent);opacity:1}
       </ul>
     </div>
 
-    <svg class="ring" id="ring" viewBox="0 0 48 48" aria-hidden="true"><circle class="back" cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3"/><circle cx="24" cy="24" r="20" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-dasharray="126" style="stroke-dashoffset:var(--ld,126)"/></svg>
-    <div class="cue mono" id="cue" aria-hidden="true">Scroll to walk out<i></i></div>
+    <button class="skip-intro" id="skipIntro" type="button">Skip intro</button>
+    <div class="cue mono" id="cue" aria-hidden="true">Scroll<i></i></div>
   </div>
 </section>
 
@@ -407,7 +428,6 @@ html.pinned .node::before{background:var(--accent);opacity:1}
 (() => {
 'use strict';
 /* ====== settings ====== */
-const POSTER_URL = 'assets/hero-poster.jpg';
 
 const $ = (s, r = document) => r.querySelector(s);
 const $$ = (s, r = document) => [...r.querySelectorAll(s)];
@@ -469,211 +489,80 @@ addEventListener('scroll', () => { if (!ticking) { ticking = true; requestAnimat
 addEventListener('resize', pageScroll);
 pageScroll();
 
-/* ====== the scrub hero ====== */
-const hero = $('#hero'), stage = $('#stage'), canvas = $('#hero-canvas'), poster = $('#poster'), ring = $('#ring'), cue = $('#cue');
-const bands = $$('.band').map((el, i, arr) => ({
-  el, i, last: i === arr.length - 1,
-  a: +el.dataset.a, b: +el.dataset.b, ramp: +el.dataset.ramp || 0,
-  op: -1, k: -1, vis: null, live: null
-}));
-let heroTop = 0, heroRange = 1;
-function measureHero() {
-  const r = hero.getBoundingClientRect();
-  heroTop = r.top + scrollY; heroRange = Math.max(1, r.height - innerHeight);
-}
-const heroProgress = () => clamp((scrollY - heroTop) / heroRange, 0, 1);
+/* ====== the walk-out intro: the video plays by itself and the captions follow its clock ====== */
+const hero = $('#hero'), stage = $('#stage'), video = $('#hero-video'), poster = $('#poster'), skipBtn = $('#skipIntro');
+const VIDEO_URL = 'assets/hero-walkout.mp4', POSTER_URL = 'assets/hero-poster.jpg';
+const bands = $$('.band').map((el, i, arr) => ({ el, last: i === arr.length - 1, a: +el.dataset.a, b: +el.dataset.b, on: false }));
+let introOn = false, introStarted = false, introDone = false, heroFailed = false, rafId = null, watchdog = null;
 
-let target = 0, shown = 0, rafId = null, lastTick = 0, heroOnScreen = true, loadK = 0, loadDone = false;
-let cueGone = false;
-
-function updateCaptions(p) {
-  if (!scrubOn) return;
+function setBands(p) {
   for (const b of bands) {
-    const len = b.b - b.a;
-    const f = Math.min(0.036, len / 3);
-    const inE = b.i === 0 ? 1 : sm(p, b.a, b.a + f);
-    const outE = b.last ? 1 : 1 - sm(p, b.b - f, b.b);
-    let op = inE * outE;
-    if (p < b.a - 0.0001 && b.i !== 0) op = 0;
-    if (p > b.b + 0.0001 && !b.last) op = 0;
-    let k = clamp((p - b.a) / (b.ramp || Math.min(0.025, len * .35)), 0, 1);
-    if (b.i === 0) k = Math.max(k, loadK);
-    op = Math.round(op * 1000) / 1000;
-    if (op !== b.op && (Math.abs(op - b.op) > .004 || op === 0 || op === 1)) {
-      b.op = op; b.el.style.opacity = op;
-      const v = op > .01;
-      if (v !== b.vis) { b.vis = v; b.el.style.visibility = v ? 'visible' : 'hidden'; }
-      const l = op > .6;
-      if (l !== b.live) { b.live = l; b.el.classList.toggle('live', l); }
-    }
-    if (Math.abs(k - b.k) >= .008 || ((k === 0 || k === 1) && k !== b.k)) { b.k = k; b.el.style.setProperty('--k', k.toFixed(3)); }
-  }
-  const g = p > .03;
-  if (g !== cueGone) { cueGone = g; cue.classList.toggle('gone', g); }
-}
-
-/* frame engine: 145 stills drawn to a canvas, no video decoder involved */
-const FRAME_COUNT = 145, KEY_STEP = 12, DECODE_RADIUS = 12, KEEP_RADIUS = 14;
-const frameUrl = i => 'assets/frames/f' + String(i).padStart(3, '0') + '.webp';
-const frameBlobs = new Array(FRAME_COUNT).fill(null);   // compressed stills, about 27 KB each
-const frameBmps = new Array(FRAME_COUNT).fill(null);    // decoded stills, kept only near the playhead
-const decoding = new Set();
-let framesLoaded = 0, framesReady = false, loaderStarted = false, wantIdx = -1, drawnIdx = -1;
-const ctx = canvas.getContext('2d', { alpha: false });
-function nearestReadyIndex(i) {
-  if (frameBmps[i]) return i;
-  for (let d = 1; d < FRAME_COUNT; d++) {
-    if (i - d >= 0 && frameBmps[i - d]) return i - d;
-    if (i + d < FRAME_COUNT && frameBmps[i + d]) return i + d;
-  }
-  return -1;
-}
-function paint() {
-  const best = nearestReadyIndex(wantIdx);
-  if (best < 0 || best === drawnIdx) return;
-  drawnIdx = best;
-  ctx.drawImage(frameBmps[best], 0, 0, canvas.width, canvas.height);
-}
-function decodeFrame(i) {
-  if (i < 0 || i >= FRAME_COUNT || frameBmps[i] || !frameBlobs[i] || decoding.has(i) || decoding.size >= 6) return;
-  decoding.add(i);
-  createImageBitmap(frameBlobs[i]).then(bmp => { decoding.delete(i); frameBmps[i] = bmp; paint(); pump(); }).catch(() => decoding.delete(i));
-}
-function pump() {
-  if (wantIdx < 0) return;
-  for (let d = 0; d <= DECODE_RADIUS; d++) { decodeFrame(wantIdx + d); if (d) decodeFrame(wantIdx - d); }
-  for (let i = 0; i < FRAME_COUNT; i++) {
-    const b = frameBmps[i];
-    if (b && Math.abs(i - wantIdx) > KEEP_RADIUS && i % KEY_STEP !== 0) { b.close(); frameBmps[i] = null; if (drawnIdx === i) drawnIdx = -1; }
+    const on = b.last ? p >= b.a : (p >= b.a && p < b.b);
+    if (on !== b.on) { b.on = on; b.el.classList.toggle('on', on); if (b.last) b.el.classList.toggle('live', on); }
   }
 }
-function drawFrame(p) {
-  const i = clamp(Math.round(p * (FRAME_COUNT - 1)), 0, FRAME_COUNT - 1);
-  if (i !== wantIdx) { wantIdx = i; pump(); }
-  paint();
+function loop() {
+  rafId = null;
+  if (!introOn || introDone) return;
+  if (stage.classList.contains('playing') && video.duration) setBands(video.currentTime / video.duration);
+  rafId = requestAnimationFrame(loop);
 }
-function tick(now) {
-  const dt = Math.min(100, now - (lastTick || now));
-  lastTick = now;
-  const k = 0.24;
-  shown += (target - shown) * (1 - Math.pow(1 - k, dt / 16.667));
-  if (Math.abs(target - shown) < 0.0005) { shown = target; rafId = null; lastTick = 0; }
-  else rafId = requestAnimationFrame(tick);
-  drawFrame(shown);
-  updateCaptions(shown);
-}
-function onScroll() {
-  target = heroProgress();
-  if (rafId === null && heroOnScreen) rafId = requestAnimationFrame(tick);
-}
-new IntersectionObserver(es => es.forEach(e => { heroOnScreen = e.isIntersecting; if (heroOnScreen && scrubOn) onScroll(); }), { threshold: 0 }).observe(hero);
-
-/* frame loader with the honest ring: stills load in passes (every 12th, 4th, 2nd, then the rest) */
-let heroInited = false, heroFailed = false;
-function initHeroOnce() {
-  if (heroInited) return; heroInited = true;
-  poster.style.backgroundImage = "url('" + POSTER_URL + "')";
-  let started = false;
-  const start = () => { if (started) return; started = true; loadFrames().catch(failVideo); };
-  const img = new Image(); img.onload = start; img.onerror = start; img.src = POSTER_URL;
-  setTimeout(start, 4000);
-}
-async function fetchFrame(i) {
-  for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const ctrl = new AbortController(); const to = setTimeout(() => ctrl.abort(), 20000);
-      const res = await fetch(frameUrl(i), { signal: ctrl.signal }); clearTimeout(to);
-      if (!res.ok) throw new Error('frame ' + res.status);
-      return await res.blob();
-    } catch (e) { if (attempt === 1) throw e; }
-  }
-}
-async function loadFrames() {
-  if (loaderStarted) return; loaderStarted = true;
-  const order = [];
-  for (const step of [12, 4, 2, 1]) for (let i = 0; i < FRAME_COUNT; i += step) if (!order.includes(i)) order.push(i);
-  const needed = Math.ceil(FRAME_COUNT / 2);
-  let next = 0, lastRing = 0, dead = false;
-  const worker = async () => {
-    while (!dead) {
-      const n = next++; if (n >= order.length) return;
-      const i = order[n];
-      try { frameBlobs[i] = await fetchFrame(i); } catch (e) { if (i === 0) { dead = true; throw e; } continue; }
-      framesLoaded++;
-      const now = performance.now();
-      if (now - lastRing > 100 || framesLoaded === needed) { lastRing = now; ring.style.setProperty('--ld', Math.round(126 * (1 - Math.min(1, framesLoaded / needed)))); }
-      if (!framesReady && framesLoaded >= needed && frameBlobs[0]) becomeReady();
-    }
-  };
-  await Promise.all(Array.from({ length: 8 }, worker));
-  if (!framesReady) throw new Error('not enough frames');
-}
-function becomeReady() {
-  framesReady = true;
-  ring.style.setProperty('--ld', 0);
-  for (let i = 0; i < FRAME_COUNT; i += KEY_STEP) decodeFrame(i);
-  if (scrubOn) { wantIdx = -1; drawFrame(shown); stage.classList.add('video-ready'); }
+function finishIntro() {
+  if (introDone) return; introDone = true;
+  clearTimeout(watchdog);
+  setBands(1);
+  stage.classList.add('video-ready', 'done'); stage.classList.remove('playing');
+  try { video.pause(); if (video.duration) video.currentTime = video.duration; } catch (_) {}
 }
 function failVideo() {
   if (heroFailed) return;
   heroFailed = true;
-  stage.classList.add('video-failed');
   applyHeroMode();
 }
-
-/* live gates: five queries, same strings as the CSS */
-const GATES = [
-  '(max-width: 720px)',
-  '(orientation: portrait) and (max-width: 1024px)',
-  '(orientation: portrait) and (pointer: coarse)',
-  '(orientation: landscape) and (pointer: coarse) and (max-height: 560px)',
-  '(prefers-reduced-motion: reduce)'
-];
-let scrubOn = false;
-function startLoadRamp() {
-  if (loadDone) return; loadDone = true;
-  const t0 = performance.now();
-  const step = now => {
-    const t = clamp((now - t0) / 1400, 0, 1);
-    loadK = 1 - Math.pow(1 - t, 3);
-    if (scrubOn) updateCaptions(shown);
-    if (t < 1) requestAnimationFrame(step);
-  };
-  requestAnimationFrame(step);
+function startIntro() {
+  if (introStarted) return; introStarted = true; introDone = false;
+  poster.style.backgroundImage = "url('" + POSTER_URL + "')";
+  video.muted = true;
+  video.src = VIDEO_URL; video.load();
+  video.addEventListener('canplay', () => {
+    if (!introOn) return;
+    video.play().then(() => { clearTimeout(watchdog); if (introOn && !introDone) stage.classList.add('video-ready', 'playing'); }).catch(failVideo);
+  }, { once: true });
+  video.addEventListener('ended', () => { if (introOn) finishIntro(); }, { once: true });
+  video.addEventListener('error', () => { if (introOn) failVideo(); }, { once: true });
+  watchdog = setTimeout(() => { if (introOn && !introDone && !stage.classList.contains('playing')) failVideo(); }, 9000);
+  if (rafId === null) rafId = requestAnimationFrame(loop);
 }
-function enableScrub() {
-  if (scrubOn) return; scrubOn = true;
-  measureHero();
-  initHeroOnce();
-  addEventListener('scroll', onScroll, { passive: true });
-  bands.forEach(b => { b.op = -1; b.k = -1; b.vis = null; b.live = null; });
-  target = shown = heroProgress();
-  updateCaptions(shown);
-  if (framesReady) { drawFrame(shown); stage.classList.add('video-ready'); }
-  startLoadRamp();
-  onScroll();
-}
-function disableScrub() {
-  if (!scrubOn && !heroInited) { return; }
-  scrubOn = false;
-  removeEventListener('scroll', onScroll);
+function enableIntro() { if (introOn) return; introOn = true; startIntro(); }
+function disableIntro() {
+  introOn = false; introStarted = false; introDone = false;
+  clearTimeout(watchdog);
   if (rafId !== null) { cancelAnimationFrame(rafId); rafId = null; }
-  bands.forEach(b => { b.el.style.opacity = ''; b.el.style.visibility = ''; b.el.style.removeProperty('--k'); b.el.classList.remove('live'); b.op = -1; b.k = -1; });
+  try { video.pause(); video.removeAttribute('src'); video.load(); } catch (_) {}
+  stage.classList.remove('video-ready', 'playing', 'done');
+  bands.forEach(b => { b.on = false; b.el.classList.remove('on', 'live'); });
   poster.style.backgroundImage = '';
-  stage.classList.remove('video-ready');
-  heroInited = false;
 }
+skipBtn.addEventListener('click', () => { if (stage.classList.contains('video-ready')) finishIntro(); else failVideo(); });
+/* pause the video while the hero is scrolled out of view */
+new IntersectionObserver(es => es.forEach(e => {
+  if (!introOn || introDone) return;
+  if (e.isIntersecting) { if (stage.classList.contains('video-ready')) video.play().catch(() => {}); }
+  else video.pause();
+}), { threshold: 0 }).observe(hero);
+
+/* the still hero is used for reduced motion, data saver, very slow connections, and if the video fails */
+const GATES = ['(prefers-reduced-motion: reduce)'];
+const conn = navigator.connection;
+const saveData = !!(conn && (conn.saveData || /(^|-)2g$/.test(conn.effectiveType || '')));
 function applyHeroMode() {
-  const gated = GATES.some(q => matchMedia(q).matches);
-  const stat = gated || heroFailed;
+  const stat = GATES.some(q => matchMedia(q).matches) || saveData || heroFailed;
   html.classList.toggle('static', stat);
-  if (stat) disableScrub(); else enableScrub();
-  measureHero(); pageScroll();
+  if (stat) disableIntro(); else enableIntro();
+  pageScroll();
 }
 const MQLS = GATES.map(q => matchMedia(q));
 MQLS.forEach(m => m.addEventListener('change', applyHeroMode));
-addEventListener('resize', () => { measureHero(); if (scrubOn) onScroll(); });
-if (document.fonts && document.fonts.ready) document.fonts.ready.then(() => { measureHero(); if (scrubOn) onScroll(); });
 applyHeroMode();
 
 /* ====== reduced motion, live, both directions ====== */
